@@ -1,8 +1,5 @@
 #include "mbed.h"
-
-DigitalOut sig(dp2);
-DigitalOut sclk(dp6);
-DigitalOut rclk(dp4);
+#include "Display.hpp"
 
 Serial pc(USBTX, USBRX);
 
@@ -15,16 +12,6 @@ char power_ctl[]      = {0x2d, 0x08};
 char axis_buff[6];
 char data_reg = 0x32;
 
-void sendByte(uint8_t data) {
-  for(int i = 0; i < 8; i++) {
-    sig  = (data & (1 << i));
-    sclk = 1;
-    sclk = 0;
-  }
-  rclk = 1;
-  rclk = 0;
-}
-
 int main() {
   pc.baud(115200);
   pc.printf("Hello World.\n\r");
@@ -35,11 +22,13 @@ int main() {
 
   int count = 0;
 
-  while(1) {
-    sendByte(1 << ((count >> 6) & 0x7));
-    sendByte(1 << ((count >> 3) & 0x7));
-    sendByte(1 << (count & 0x7));
+  Display *display = Display::getInstance();
+  display->set(0, 0);
+  display->set(1, 1);
+  display->set(2, 2);
+  display->swapBuffer();
 
+  while(1) {
     uint8_t length = 6;
     i2c.write(device_addr_write, &data_reg, 1);
     i2c.read(device_addr_read, axis_buff, length);
