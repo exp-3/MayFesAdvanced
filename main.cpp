@@ -16,10 +16,6 @@ int main() {
   pc.baud(115200);
   pc.printf("Hello World.\n\r");
 
-  i2c.frequency(100000);
-  i2c.write(device_addr_write, data_format, 2);
-  i2c.write(device_addr_write, power_ctl, 2);
-
   int count = 0;
 
   Display *display = Display::getInstance();
@@ -29,13 +25,6 @@ int main() {
   display->swapBuffer();
 
   while(1) {
-    uint8_t length = 6;
-    i2c.write(device_addr_write, &data_reg, 1);
-    i2c.read(device_addr_read, axis_buff, length);
-    int x = (((int)axis_buff[1]) << 8) | axis_buff[0];
-    int y = (((int)axis_buff[3]) << 8) | axis_buff[2];
-    int z = (((int)axis_buff[5]) << 8) | axis_buff[4];
-
     pc.printf("count: %d\n\r", count);
     count++;
     pc.printf("x: %d\n\r", x);
