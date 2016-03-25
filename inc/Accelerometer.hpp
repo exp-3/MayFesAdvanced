@@ -19,13 +19,13 @@ class Accelerometer {
   void updateValue();
 
   static Accelerometer *mInstance;
-  I2C *i2c;
-  char DEVICE_ADDR_READ  = 0xa7;
-  char DEVICE_ADDR_WRITE = 0xa6;
-  char DATA_FORMAT_REG   = 0x31;
-  char POWER_CTL_REG     = 0x2d;
-  char DATA_REG          = 0x32;
+  static const char DEVICE_ADDR_READ;
+  static const char DEVICE_ADDR_WRITE;
+  static const char DATA_FORMAT_REG;
+  static const char POWER_CTL_REG;
+  static const char DATA_REG;
 
+  I2C *i2c;
   int x, y, z;
 };
 

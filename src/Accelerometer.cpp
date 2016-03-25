@@ -1,7 +1,12 @@
 #include "mbed.h"
 #include "Accelerometer.hpp"
 
-Accelerometer *Accelerometer::mInstance = NULL;
+Accelerometer *Accelerometer::mInstance     = NULL;
+const char Accelerometer::DEVICE_ADDR_READ  = 0xa7;
+const char Accelerometer::DEVICE_ADDR_WRITE = 0xa6;
+const char Accelerometer::DATA_FORMAT_REG   = 0x31;
+const char Accelerometer::POWER_CTL_REG     = 0x2d;
+const char Accelerometer::DATA_REG          = 0x32;
 
 Accelerometer *Accelerometer::getInstance() {
   if(mInstance == NULL) {
@@ -19,8 +24,10 @@ int Accelerometer::getZ() { return z; }
 Accelerometer::Accelerometer() {
   i2c = new I2C(dp5, dp27);
   i2c->frequency(100000);
-  writeData(DATA_FORMAT_REG, 0x00, 1);
-  write(POWER_CTL_REG, 0x08, 1);
+  char byte = 0x00;
+  writeData(DATA_FORMAT_REG, &byte, 1);
+  byte = 0x08;
+  writeData(POWER_CTL_REG, &byte, 1);
 }
 
 void Accelerometer::updateValue() {
@@ -32,16 +39,16 @@ void Accelerometer::updateValue() {
   z = (((int)axis_buff[5]) << 8) | axis_buff[4];
 }
 
-void Accelerometer::writeData(char reg, char *data, int length) {
+void Accelerometer::writeData(char reg, const char *data, int length) {
   char temp[length + 1];
   temp[0] = reg;
   for(int i = 0; i < length; i++) {
     temp[i + 1] = data[i];
   }
-  i2c.write(DEVICE_ADDR_WRITE, temp, length + 1);
+  i2c->write(DEVICE_ADDR_WRITE, temp, length + 1);
 }
 
 void Accelerometer::readData(char reg, char *data, int length) {
   writeData(reg, NULL, 0);
-  i2c.read(DEVICE_ADDR_READ, data, length);
+  i2c->read(DEVICE_ADDR_READ, data, length);
 }
