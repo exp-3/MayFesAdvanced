@@ -1,4 +1,5 @@
 #ifndef DISPLAY_H
+#define DISPLAY_H
 
 #include "mbed.h"
 
@@ -31,4 +32,4 @@ class Display {
   bool buffers[2][height][width];
 };
 
-#endif
+#endif /* end of include guard: DISPLAY_H */
