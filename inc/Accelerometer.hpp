@@ -12,6 +12,7 @@ class Accelerometer {
 
  private:
   Accelerometer();
+  ~Accelerometer();
 
   void writeData(char reg, const char *data, int length);
   void readData(char reg, char *data, int length);
@@ -19,11 +20,12 @@ class Accelerometer {
   void updateValue();
 
   static Accelerometer *mInstance;
-  static const char DEVICE_ADDR_READ;
-  static const char DEVICE_ADDR_WRITE;
-  static const char DATA_FORMAT_REG;
-  static const char POWER_CTL_REG;
-  static const char DATA_REG;
+  static const char DEVICE_ADDR_READ  = 0xa7;
+  static const char DEVICE_ADDR_WRITE = 0xa6;
+  static const char DATA_FORMAT_REG   = 0x31;
+  static const char POWER_CTL_REG     = 0x2d;
+  static const char DATA_REG          = 0x32;
+  Ticker ticker;
 
   I2C *i2c;
   int x, y, z;
