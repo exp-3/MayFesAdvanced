@@ -25,6 +25,10 @@ void Display::swapBuffer() {
   resetBuffer(buffers[backBuffer]);
 }
 
+bool Display::getBuffer(int row, int col) {
+  return buffers[surfaceBuffer][row][col];
+}
+
 Display::Display() {
   sig  = new DigitalOut(dp2);
   sclk = new DigitalOut(dp6);
@@ -33,7 +37,10 @@ Display::Display() {
   surfaceBuffer = 0;
   backBuffer    = 1;
 
-  ticker.attach(this, &Display::shiftRow, 0.01);
+  resetBuffer(buffers[surfaceBuffer]);
+  resetBuffer(buffers[backBuffer]);
+
+  ticker.attach(this, &Display::shiftRow, 0.001);
 }
 
 Display::~Display() { ticker.detach(); }

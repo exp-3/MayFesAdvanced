@@ -11,6 +11,7 @@ class Display {
   void set(int row, int col);
   void clear(int row, int col);
   void swapBuffer();
+  bool getBuffer(int row, int col);
 
  private:
   Display();
