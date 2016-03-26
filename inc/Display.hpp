@@ -19,8 +19,8 @@ class Display {
   ~Display();
 
   void clearBuffer(bool buffer[height][width]);
-  void shiftRow();
-  int generateShiftRegisterCode(int row);
+  void shiftCol();
+  int generateShiftRegisterCode(int col);
   void sendShiftRegisterCode(int code);
 
   static Display *mInstance;

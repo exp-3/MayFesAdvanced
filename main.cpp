@@ -13,9 +13,11 @@ int main() {
   Display *display = Display::getInstance();
   Accelerometer *accel = Accelerometer::getInstance();
   display->clear();
-  display->set(0, 0);
-  display->set(1, 1);
-  display->set(2, 2);
+  for(int i = 0; i < 8; i++) {
+    for(int j = 0; j < 16; j++) {
+      display->set(i, j);
+    }
+  }
   display->flush();
 
   while(1) {
@@ -23,7 +25,7 @@ int main() {
     count++;
     pc.printf("%d\n\r", (int)display->getBuffer(0, 0));
     pc.printf("%d\n\r", (int)display->getBuffer(0, 1));
-    pc.printf("%d\n\r", (int)display->getBuffer(1, 1));
+    pc.printf("%d\n\r", (int)display->getBuffer(0, 2));
     pc.printf("\n\r");
     wait(0.01);
   }
