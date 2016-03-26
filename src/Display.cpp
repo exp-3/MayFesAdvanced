@@ -42,7 +42,7 @@ Display::Display() {
   clearBuffer(buffers[surfaceBuffer]);
   clearBuffer(buffers[backBuffer]);
 
-  ticker.attach(this, &Display::shiftRow, 0.001);
+  ticker.attach_us(this, &Display::shiftCol, 80);
 }
 
 Display::~Display() { ticker.detach(); }
@@ -55,21 +55,21 @@ void Display::clearBuffer(bool buffer[height][width]) {
   }
 }
 
-void Display::shiftRow() {
-  static int currentRow = 0;
-  currentRow &= 0x7;
-  sendShiftRegisterCode(generateShiftRegisterCode(currentRow));
-  currentRow++;
+void Display::shiftCol() {
+  static int currentCol = 0;
+  currentCol &= 0b1111;
+  sendShiftRegisterCode(generateShiftRegisterCode(currentCol));
+  currentCol++;
 }
 
-int Display::generateShiftRegisterCode(int row) {
+int Display::generateShiftRegisterCode(int col) {
   static int rowMap[] = {7, 5, 4, 6, 0, 3, 1, 2};
   static int colMap[] = {10, 15, 14, 8, 13, 9, 11, 12, 2, 7, 6, 0, 5, 1, 3, 4};
-  int rowCode         = (1 << rowMap[row]);
-  int colCode = 0;
-  for(int i = 0; i < width; i++) {
-    if(buffers[surfaceBuffer][row][i]) {
-      colCode |= (1 << colMap[i]);
+  int colCode         = (1 << colMap[col]);
+  int rowCode = 0;
+  for(int i = 0; i < height; i++) {
+    if(buffers[surfaceBuffer][i][col]) {
+      rowCode |= (1 << rowMap[i]);
     }
   }
   return ((rowCode << width) | colCode);
