@@ -12,9 +12,9 @@ Display *Display::getInstance() {
 
 void Display::set(int row, int col) { buffers[backBuffer][row][col] = true; }
 
-void Display::clear(int row, int col) { buffers[backBuffer][row][col] = false; }
+void Display::reset(int row, int col) { buffers[backBuffer][row][col] = false; }
 
-void Display::swapBuffer() {
+void Display::flush() {
   if(surfaceBuffer == 0) {
     surfaceBuffer = 1;
     backBuffer    = 0;
@@ -22,8 +22,10 @@ void Display::swapBuffer() {
     surfaceBuffer = 0;
     backBuffer    = 1;
   }
-  resetBuffer(buffers[backBuffer]);
+  clearBuffer(buffers[backBuffer]);
 }
+
+void Display::clear() { clearBuffer(buffers[backBuffer]); }
 
 bool Display::getBuffer(int row, int col) {
   return buffers[surfaceBuffer][row][col];
@@ -37,15 +39,15 @@ Display::Display() {
   surfaceBuffer = 0;
   backBuffer    = 1;
 
-  resetBuffer(buffers[surfaceBuffer]);
-  resetBuffer(buffers[backBuffer]);
+  clearBuffer(buffers[surfaceBuffer]);
+  clearBuffer(buffers[backBuffer]);
 
   ticker.attach(this, &Display::shiftRow, 0.001);
 }
 
 Display::~Display() { ticker.detach(); }
 
-void Display::resetBuffer(bool buffer[height][width]) {
+void Display::clearBuffer(bool buffer[height][width]) {
   for(int i = 0; i < height; i++) {
     for(int j = 0; j < width; j++) {
       buffer[i][j] = false;

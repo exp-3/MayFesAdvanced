@@ -1,12 +1,7 @@
 #include "mbed.h"
 #include "Accelerometer.hpp"
 
-Accelerometer *Accelerometer::mInstance     = NULL;
-const char Accelerometer::DEVICE_ADDR_READ  = 0xa7;
-const char Accelerometer::DEVICE_ADDR_WRITE = 0xa6;
-const char Accelerometer::DATA_FORMAT_REG   = 0x31;
-const char Accelerometer::POWER_CTL_REG     = 0x2d;
-const char Accelerometer::DATA_REG          = 0x32;
+Accelerometer *Accelerometer::mInstance = NULL;
 
 Accelerometer *Accelerometer::getInstance() {
   if(mInstance == NULL) {
@@ -28,7 +23,11 @@ Accelerometer::Accelerometer() {
   writeData(DATA_FORMAT_REG, &byte, 1);
   byte = 0x08;
   writeData(POWER_CTL_REG, &byte, 1);
+
+  ticker.attach(this, &Accelerometer::updateValue, 0.01);
 }
+
+Accelerometer::~Accelerometer() { ticker.detach(); }
 
 void Accelerometer::updateValue() {
   int length = 6;
