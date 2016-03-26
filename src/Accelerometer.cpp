@@ -33,9 +33,9 @@ void Accelerometer::updateValue() {
   int length = 6;
   char axis_buff[length];
   readData(DATA_REG, axis_buff, length);
-  x = (((int)axis_buff[1]) << 8) | axis_buff[0];
-  y = (((int)axis_buff[3]) << 8) | axis_buff[2];
-  z = (((int)axis_buff[5]) << 8) | axis_buff[4];
+  x = (int16_t)((axis_buff[1]) << 8) | axis_buff[0];
+  y = (int16_t)((axis_buff[3]) << 8) | axis_buff[2];
+  z = (int16_t)((axis_buff[5]) << 8) | axis_buff[4];
 }
 
 void Accelerometer::writeData(char reg, const char *data, int length) {
