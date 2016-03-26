@@ -1,12 +1,7 @@
 #include "mbed.h"
 #include "Accelerometer.hpp"
 
-Accelerometer *Accelerometer::mInstance     = NULL;
-const char Accelerometer::DEVICE_ADDR_READ  = 0xa7;
-const char Accelerometer::DEVICE_ADDR_WRITE = 0xa6;
-const char Accelerometer::DATA_FORMAT_REG   = 0x31;
-const char Accelerometer::POWER_CTL_REG     = 0x2d;
-const char Accelerometer::DATA_REG          = 0x32;
+Accelerometer *Accelerometer::mInstance = NULL;
 
 Accelerometer *Accelerometer::getInstance() {
   if(mInstance == NULL) {
