@@ -9,15 +9,16 @@ class Display {
   static const int height = 8;
   static const int width = 16;
   void set(int row, int col);
-  void clear(int row, int col);
-  void swapBuffer();
+  void reset(int row, int col);
+  void flush();
+  void clear();
   bool getBuffer(int row, int col);
 
  private:
   Display();
   ~Display();
 
-  void resetBuffer(bool buffer[height][width]);
+  void clearBuffer(bool buffer[height][width]);
   void shiftRow();
   int generateShiftRegisterCode(int row);
   void sendShiftRegisterCode(int code);
