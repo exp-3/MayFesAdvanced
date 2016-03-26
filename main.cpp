@@ -18,6 +18,9 @@ int main() {
   while(1) {
     pc.printf("count: %d\n\r", count);
     count++;
+    pc.printf("%d\n\r", (int)display->getBuffer(0, 0));
+    pc.printf("%d\n\r", (int)display->getBuffer(0, 1));
+    pc.printf("%d\n\r", (int)display->getBuffer(1, 1));
     pc.printf("\n\r");
     wait(0.01);
   }
