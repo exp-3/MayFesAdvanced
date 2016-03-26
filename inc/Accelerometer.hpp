@@ -12,6 +12,7 @@ class Accelerometer {
 
  private:
   Accelerometer();
+  ~Accelerometer();
 
   void writeData(char reg, const char *data, int length);
   void readData(char reg, char *data, int length);
