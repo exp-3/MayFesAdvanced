@@ -24,6 +24,7 @@ class Accelerometer {
   static const char DATA_FORMAT_REG   = 0x31;
   static const char POWER_CTL_REG     = 0x2d;
   static const char DATA_REG          = 0x32;
+  Ticker ticker;
 
   I2C *i2c;
   int x, y, z;

@@ -23,7 +23,11 @@ Accelerometer::Accelerometer() {
   writeData(DATA_FORMAT_REG, &byte, 1);
   byte = 0x08;
   writeData(POWER_CTL_REG, &byte, 1);
+
+  ticker.attach(this, &Accelerometer::updateValue(), 0.01);
 }
+
+Accelerometer::~Accelerometer() { ticker.detach(); }
 
 void Accelerometer::updateValue() {
   int length = 6;
