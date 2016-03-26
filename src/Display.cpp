@@ -42,7 +42,7 @@ Display::Display() {
   clearBuffer(buffers[surfaceBuffer]);
   clearBuffer(buffers[backBuffer]);
 
-  ticker.attach_us(this, &Display::shiftCol, 80);
+  ticker.attach_us(this, &Display::shiftCol, 100);
 }
 
 Display::~Display() { ticker.detach(); }
