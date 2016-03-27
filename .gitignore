@@ -3,6 +3,7 @@
 !Makefile
 !mbed
 !.gitignore
+!.gcc-flags.json
 !.clang_complete
 !inc
 !src
