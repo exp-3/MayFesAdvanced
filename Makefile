@@ -2,7 +2,7 @@
 # see http://mbed.org/handbook/Exporting-to-GCC-ARM-Embedded
 
 GCC_BIN :=
-PROJECT := Firmware_advanced
+PROJECT := MayFesAdvanced
 SRCS := $(wildcard ./*.c)\
         $(wildcard ./*.cpp)\
         $(wildcard ./src/*.c)\
