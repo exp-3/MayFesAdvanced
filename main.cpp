@@ -27,11 +27,9 @@ int main() {
   Display *display     = Display::getInstance();
   Accelerometer *accel = Accelerometer::getInstance();
   display->clear();
-  for(int i = 0; i < 8; i++) {
-    for(int j = 0; j < 16; j++) {
-      display->set(i, j);
-    }
-  }
+  display->set(0, 0);
+  display->set(1, 1);
+  display->set(2, 2);
   display->flush();
 
   while(1) {
