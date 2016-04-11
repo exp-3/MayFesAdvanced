@@ -6,7 +6,11 @@ PROJECT := MayFesAdvanced
 SRCS := $(wildcard ./*.c)\
         $(wildcard ./*.cpp)\
         $(wildcard ./src/*.c)\
-        $(wildcard ./src/*.cpp)
+        $(wildcard ./src/*.cpp)\
+        $(wildcard ./lib/src/*.c)\
+        $(wildcard ./lib/src/*.cpp)\
+        $(wildcard ./games/src/*.c)\
+        $(wildcard ./games/src/*.cpp)
 
 OBJDIR := $(strip ./obj)
 
@@ -19,7 +23,7 @@ OBJECTS := $(OBJECTS:.cpp=.o)
 OBJECTS := $(addprefix $(OBJDIR)/, $(OBJECTS))
 
 SYS_OBJECTS = ./mbed/TARGET_LPC1114/TOOLCHAIN_GCC_ARM/board.o ./mbed/TARGET_LPC1114/TOOLCHAIN_GCC_ARM/cmsis_nvic.o ./mbed/TARGET_LPC1114/TOOLCHAIN_GCC_ARM/retarget.o ./mbed/TARGET_LPC1114/TOOLCHAIN_GCC_ARM/startup_LPC11xx.o ./mbed/TARGET_LPC1114/TOOLCHAIN_GCC_ARM/system_LPC11xx.o
-INCLUDE_PATHS = -I. -I./inc -I./mbed -I./mbed/TARGET_LPC1114 -I./mbed/TARGET_LPC1114/TARGET_NXP -I./mbed/TARGET_LPC1114/TARGET_NXP/TARGET_LPC11XX_11CXX -I./mbed/TARGET_LPC1114/TARGET_NXP/TARGET_LPC11XX_11CXX/TARGET_LPC11XX -I./mbed/TARGET_LPC1114/TOOLCHAIN_GCC_ARM
+INCLUDE_PATHS = -I. -I./inc -I./lib/inc -I./games/inc -I./mbed -I./mbed/TARGET_LPC1114 -I./mbed/TARGET_LPC1114/TARGET_NXP -I./mbed/TARGET_LPC1114/TARGET_NXP/TARGET_LPC11XX_11CXX -I./mbed/TARGET_LPC1114/TARGET_NXP/TARGET_LPC11XX_11CXX/TARGET_LPC11XX -I./mbed/TARGET_LPC1114/TOOLCHAIN_GCC_ARM
 LIBRARY_PATHS = -L./mbed/TARGET_LPC1114/TOOLCHAIN_GCC_ARM
 LIBRARIES = -lmbed
 LINKER_SCRIPT = ./mbed/TARGET_LPC1114/TOOLCHAIN_GCC_ARM/LPC1114.ld
