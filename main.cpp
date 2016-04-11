@@ -1,6 +1,8 @@
 #include "mbed.h"
 #include "Display.hpp"
 #include "Accelerometer.hpp"
+#include "Game.hpp"
+#include "BreakOut.hpp"
 
 Serial pc(USBTX, USBRX);
 
@@ -25,24 +27,21 @@ int main() {
   int count = 0;
 
   Display *display     = Display::getInstance();
-  Accelerometer *accel = Accelerometer::getInstance();
-  display->clear();
-  display->set(0, 0);
-  display->set(1, 1);
-  display->set(2, 2);
-  display->flush();
+
+  Game *game = BreakOut::getInstance();
 
   while(1) {
-    pc.printf("\033[2J");
-    pc.printf("\033[0;0H");
-    pc.printf("count: %d\n\r", count);
+    if(game->isGameOver()) {
+      break;
+    }
+    //描画開始
+    display->clear();
+
+    game->update();
+
+    display->flush();
+
     count++;
-    pc.printf("x: ");
-    printValue(accel->getX());
-    pc.printf("y: ");
-    printValue(accel->getY());
-    pc.printf("z: ");
-    printValue(accel->getZ());
-    wait(0.01);
+    wait(0.1);
   }
 }
