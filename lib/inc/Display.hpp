@@ -27,6 +27,7 @@ class Display {
   DigitalOut *sig;
   DigitalOut *sclk;
   DigitalOut *rclk;
+  SPI *spi;
   Ticker ticker;
 
   int surfaceBuffer;
