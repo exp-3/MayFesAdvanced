@@ -17,26 +17,17 @@ Display *Display::getInstance() {
   return mInstance;
 }
 
-void Display::set(int row, int col) { buffers[backBuffer][row][col] = true; }
+void Display::set(int row, int col) { buffer[row][col] = true; }
 
-void Display::reset(int row, int col) { buffers[backBuffer][row][col] = false; }
+void Display::reset(int row, int col) { buffer[row][col] = false; }
 
 void Display::flush() {
-  if(surfaceBuffer == 0) {
-    surfaceBuffer = 1;
-    backBuffer    = 0;
-  } else {
-    surfaceBuffer = 0;
-    backBuffer    = 1;
-  }
-  clearBuffer(buffers[backBuffer]);
+  convertBufferToShiftRegisterCodes();
+  clearBuffer();
 }
 
-void Display::clear() { clearBuffer(buffers[backBuffer]); }
+void Display::clear() { clearBuffer(); }
 
-bool Display::getBuffer(int row, int col) {
-  return buffers[surfaceBuffer][row][col];
-}
 
 // 8888888b.  8888888b.  8888888 888     888     d8888 88888888888 8888888888
 // 888   Y88b 888   Y88b   888   888     888    d88888     888     888
@@ -50,25 +41,22 @@ bool Display::getBuffer(int row, int col) {
 Display *Display::mInstance = NULL;
 
 Display::Display() {
-  // sig  = new DigitalOut(dp2);
-  // sclk = new DigitalOut(dp6);
   rclk = new DigitalOut(dp4);
 
-  // spi = new SPI(dp2, NC, dp6);
-  // spi->format(8, 0);
+  spi = new SPI(dp2, NC, dp6);
+  spi->format(16, 0);
 
-  surfaceBuffer = 0;
-  backBuffer    = 1;
+  //spiCallBackFunc.attach(this, &Display::spiCallBackHandler);
 
-  clearBuffer(buffers[surfaceBuffer]);
-  clearBuffer(buffers[backBuffer]);
+  clearBuffer();
+  flush();
 
-  ticker.attach_us(this, &Display::shiftCol, 100);
+  ticker.attach_us(this, &Display::shiftCol, 54);
 }
 
 Display::~Display() { ticker.detach(); }
 
-void Display::clearBuffer(bool buffer[height][width]) {
+void Display::clearBuffer() {
   for(int i = 0; i < height; i++) {
     for(int j = 0; j < width; j++) {
       buffer[i][j] = false;
@@ -79,8 +67,14 @@ void Display::clearBuffer(bool buffer[height][width]) {
 void Display::shiftCol() {
   static int currentCol = 0;
   currentCol &= 0b1111;
-  sendShiftRegisterCode(generateShiftRegisterCode(currentCol));
+  sendShiftRegisterCode(shiftRegisterCodes[currentCol]);
   currentCol++;
+}
+
+void Display::convertBufferToShiftRegisterCodes() {
+  for(int col = 0; col < width; col++) {
+    shiftRegisterCodes[col] = generateShiftRegisterCode(col);
+  }
 }
 
 int Display::generateShiftRegisterCode(int col) {
@@ -89,20 +83,22 @@ int Display::generateShiftRegisterCode(int col) {
   int colCode         = (1 << colMap[col]);
   int rowCode = 0;
   for(int i = 0; i < height; i++) {
-    if(buffers[surfaceBuffer][i][col]) {
+    if(buffer[i][col]) {
       rowCode |= (1 << rowMap[i]);
     }
   }
   return ((rowCode << width) | colCode);
 }
 
-void Display::sendShiftRegisterCode(int code) {
-  for(int i = 0; i < height + width; i++) {
-    *sig  = (code & (1 << ((height + width - 1) - i)));
-    *sclk = 0;
-    *sclk = 1;
-  }
-  //spi->write(code);
+void Display::sendShiftRegisterCode(const int code) {
+  spi->write((code >> 16) & 0xffff);
+  spi->write(code & 0xffff);
+  //spi->transfer(&code, (int)sizeof(int), (int*)NULL, 0, spiCallBackFunc);
+  *rclk = 0;
+  *rclk = 1;
+}
+
+void Display::spiCallBackHandler(int events) {
   *rclk = 0;
   *rclk = 1;
 }

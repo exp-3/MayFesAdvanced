@@ -12,27 +12,26 @@ class Display {
   void reset(int row, int col);
   void flush();
   void clear();
-  bool getBuffer(int row, int col);
 
  private:
   Display();
   ~Display();
 
-  void clearBuffer(bool buffer[height][width]);
+  void clearBuffer();
   void shiftCol();
+  void convertBufferToShiftRegisterCodes();
   int generateShiftRegisterCode(int col);
   void sendShiftRegisterCode(int code);
+  void spiCallBackHandler(int events);
 
   static Display *mInstance;
-  DigitalOut *sig;
-  DigitalOut *sclk;
   DigitalOut *rclk;
   SPI *spi;
   Ticker ticker;
+  event_callback_t spiCallBackFunc;
 
-  int surfaceBuffer;
-  int backBuffer;
-  bool buffers[2][height][width];
+  bool buffer[height][width];
+  int shiftRegisterCodes[width];
 };
 
 #endif /* end of include guard: DISPLAY_H */
