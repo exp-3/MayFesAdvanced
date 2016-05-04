@@ -44,14 +44,12 @@ Display::Display() {
   rclk = new DigitalOut(dp4);
 
   spi = new SPI(dp2, NC, dp6);
-  spi->format(16, 0);
-
-  //spiCallBackFunc.attach(this, &Display::spiCallBackHandler);
+  spi->format(12, 0);
 
   clearBuffer();
   flush();
 
-  ticker.attach_us(this, &Display::shiftCol, 54);
+  ticker.attach_us(this, &Display::shiftCol, 625);
 }
 
 Display::~Display() { ticker.detach(); }
@@ -91,14 +89,8 @@ int Display::generateShiftRegisterCode(int col) {
 }
 
 void Display::sendShiftRegisterCode(const int code) {
-  spi->write((code >> 16) & 0xffff);
-  spi->write(code & 0xffff);
-  //spi->transfer(&code, (int)sizeof(int), (int*)NULL, 0, spiCallBackFunc);
-  *rclk = 0;
-  *rclk = 1;
-}
-
-void Display::spiCallBackHandler(int events) {
+  spi->write(code >> 12);
+  spi->write(code);
   *rclk = 0;
   *rclk = 1;
 }

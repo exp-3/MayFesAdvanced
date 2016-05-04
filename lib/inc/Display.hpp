@@ -22,13 +22,11 @@ class Display {
   void convertBufferToShiftRegisterCodes();
   int generateShiftRegisterCode(int col);
   void sendShiftRegisterCode(int code);
-  void spiCallBackHandler(int events);
 
   static Display *mInstance;
   DigitalOut *rclk;
   SPI *spi;
   Ticker ticker;
-  event_callback_t spiCallBackFunc;
 
   bool buffer[height][width];
   int shiftRegisterCodes[width];
