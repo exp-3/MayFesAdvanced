@@ -82,7 +82,7 @@ KeepStick::KeepStick() {
 	accel = Accelerometer::getInstance();
 
 	stick.rad = 0.0;
-	stick.rad_v = 0.0;
+	stick.rad_v = 0.1;
 	stick.length = 5;
 
 	bar.x = 6;

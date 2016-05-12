@@ -43,7 +43,7 @@ private:
 
 	static const int W_GRIDS = 16; //セグメントLEDの横方向の個数
 	static const int MAXTIME = 8; //初期制限時間
-	static const double SENSITIVE = 0.01;
+	static const double SENSITIVE = 0.2;
 	int time = MAXTIME; //残り時間
 
 	Display *display;

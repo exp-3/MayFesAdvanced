@@ -3,6 +3,7 @@
 #include "Accelerometer.hpp"
 #include "Game.hpp"
 #include "BreakOut.hpp"
+#include "KeepStick.hpp"
 
 Serial pc(USBTX, USBRX);
 
@@ -28,7 +29,7 @@ int main() {
 
   Display *display     = Display::getInstance();
 
-  Game *game = BreakOut::getInstance();
+  Game *game = KeepStick::getInstance();
 
   while(1) {
     if(game->isGameOver()) {
