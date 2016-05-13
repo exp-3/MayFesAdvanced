@@ -4,15 +4,16 @@
 #include "Game.hpp"
 #include "Display.hpp"
 #include "Accelerometer.hpp"
+#include "PushSwitch.hpp"
 
 class Stick {
 public:
 	//重心位置は棒の先端
-	double rad, rad_v; //棒の角度, 棒の角速度
-	double cos, sin;
+	float rad, rad_v; //棒の角度, 棒の角速度
+	float cos, sin;
 	int length; //棒のながさ
 	void tri(void){
-		double x = rad, x2, x3, x4, x5;
+		float x = rad, x2, x3, x4, x5;
 		x2 = x * x;
 		x3 = x * x2;
 		x4 = x * x3;
@@ -42,13 +43,15 @@ private:
 
 	static KeepStick *mInstance;
 
-	static const int W_GRIDS = 16; //セグメントLEDの横方向の個数
-	static const double SENSITIVE = 0.05;
-	static const int MAXTIME = 8;
+	int W_GRIDS; //セグメントLEDの横方向の個数
+	float SENSITIVE;
+	int MAXTIME;
 	int time; //残り時間
 
 	Display *display;
 	Accelerometer *accel;
+	PushSwitch *pushswitch;
+	
 	Stick stick;
 	kBar bar;
 

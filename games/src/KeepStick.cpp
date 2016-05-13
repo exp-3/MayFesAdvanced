@@ -24,7 +24,10 @@ Game *KeepStick::getInstance() {
 
 void KeepStick::init() {
 	timer.start();
-	time = MAXTIME;
+	W_GRIDS = 16;
+	SENSITIVE = 0.05;
+	MAXTIME = 8;
+	time = 8;
 
 	stick.rad = 0.0;
 	stick.rad_v = 0.2;
@@ -38,18 +41,23 @@ void KeepStick::init() {
 }
 
 void KeepStick::update() {
+	/*初期化*/
+	if(pushswitch->isPressed()){
+		pushswitch->reset();
+		init();
+	}
 	/*処理*/
-	if(!clearFlag){
+	if(!clearFlag && !gameOverFlag){
 		// stickの更新
 		stick.tri();
 		if(stick.cos <= 0){
 			gameOverFlag = true;
 		}else{
 			stick.rad += stick.rad_v;
-			double temp;
+			float temp;
 			if(stick.rad < 0) temp = -0.1;
 			else temp = 0.1;
-			stick.rad_v -= ((double)(accel->getY() >> 5) + temp) * SENSITIVE;
+			stick.rad_v -= ((float)(accel->getY() >> 5) + temp) * SENSITIVE;
 		}
 		// barの更新
 		bar.x += accel->getY() >> 5;
@@ -65,6 +73,8 @@ void KeepStick::update() {
 			timer.reset();
 		}
 	}
+
+		
 	/*描画*/
 	if(clearFlag){
 		int temp = (int)(timer.read_ms() / 100) % 16;
@@ -93,7 +103,7 @@ void KeepStick::update() {
 			display->set(7, bar.x + i);
 		}
 		// stickの描画
-		for(double i = 0.5; (int)i < stick.length; i += 1.0){
+		for(float i = 0.5; (int)i < stick.length; i += 1.0){
 			int temp = bar.x + 2 + (int)(i * stick.sin);
 			if(temp >= 0 && temp <= 15){
 				display->set(6 - (int)(i * stick.cos), bar.x + 2 + (int)(i * stick.sin));
@@ -113,6 +123,7 @@ bool KeepStick::isCleared() {
 KeepStick::KeepStick() {
 	display = Display::getInstance();
 	accel = Accelerometer::getInstance();
-
+	pushswitch = PushSwitch::getInstance();
+	
 	init();
 }

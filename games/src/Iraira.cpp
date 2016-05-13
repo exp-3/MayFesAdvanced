@@ -101,14 +101,20 @@ void Iraira::init() {
 	knight.sensitive = 0.1;
 	knightbrinkstate = 0;
 
+	walls.clear();
+	doors.clear();
+	
 	wallstartFlag = false;
-
 	gameOverFlag = false;
 	clearFlag = false;
 }
 
 void Iraira::update() {
-    if(!clearFlag){
+	if(pushswitch->isPressed()){
+		pushswitch->reset();
+		init();
+	}
+	if(!clearFlag){
 		// wallの更新
 		if(!wallstartFlag){
 			if(timer.read_ms() > 1000){ //壁を生成し始めるまで1秒まつ
@@ -290,6 +296,7 @@ bool Iraira::isCleared() {
 Iraira::Iraira() {
 	display = Display::getInstance();
 	accel = Accelerometer::getInstance();
-
+	pushswitch = PushSwitch::getInstance();
+	
 	init();
 }
