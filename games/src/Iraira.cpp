@@ -103,7 +103,7 @@ void Iraira::init() {
 
 	walls.clear();
 	doors.clear();
-	
+
 	wallstartFlag = false;
 	gameOverFlag = false;
 	clearFlag = false;
@@ -124,8 +124,8 @@ void Iraira::update() {
 			}
 		}else{
 			int waittime;
-			if(level < 10) waittime = 700 - level * 50;
-			else waittime = 700 - 10 * 50;
+			if(level < 20) waittime = 690 - level * 30;
+			else waittime = 690 - 19 * 30;
 			if(timer.read_ms() > waittime) {
 				if(!walls.empty()){
 					if(!doors.empty()){
@@ -151,7 +151,7 @@ void Iraira::update() {
 							eraseFlag = true;
 						}
 					}
-					if(rand() % 20 == 0){
+					if(rand() % 10 == 0){
 						doors.push_back(Door());
 						doors.back().x = walls.back().x;
 						if(rand() % 3 == 0) {
@@ -297,6 +297,6 @@ Iraira::Iraira() {
 	display = Display::getInstance();
 	accel = Accelerometer::getInstance();
 	pushswitch = PushSwitch::getInstance();
-	
+
 	init();
 }
