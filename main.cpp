@@ -37,7 +37,7 @@ Game* Opening(Display *display){
 			{0,1,0,0,0}
 		}
 	};
-	
+
 	int x = 8, y = 4;
 	Timer timer;
 	timer.start();
@@ -47,7 +47,7 @@ Game* Opening(Display *display){
 	pushswitch = PushSwitch::getInstance();
 	int count = 0;
 	int mode;
-	
+
 	while(1){
 		display->clear();
 		/*処理*/
@@ -69,7 +69,7 @@ Game* Opening(Display *display){
 		y += accel->getX() >> 6;
 		if(y < 0) y = 0;
 		else if(y > 7) y = 7;
-		
+
 		/*ゲームモード確定*/
 		if(pushswitch->isPressed()){
 			pushswitch->reset();
@@ -87,7 +87,7 @@ Game* Opening(Display *display){
 				break;
 			}
 		}
-		
+
 		/*描画*/
 		for(int k = 0;k < 3;k++){
 			for(int i = 0;i < 7;i++){
@@ -169,7 +169,7 @@ Game* Opening(Display *display){
 			display->set(2, 3);
 			display->set(3, 3);
 			display->set(4, 3);
-			
+
 			display->set(2, 13);
 			display->set(2, 14);
 			display->set(2, 15);
@@ -223,7 +223,7 @@ Game* Opening(Display *display){
 		}
 		display->set(0, x);
 		display->set(y, 0);
-		
+
 		display->flush();
 		wait(0.1);
 	}
@@ -232,8 +232,8 @@ Game* Opening(Display *display){
 int main() {
 	Display *display = Display::getInstance();
 
-	Game *game = Opening(display); 
-	
+	Game *game = Opening(display);
+
 	while(1) {
 		//描画開始
 		display->clear();

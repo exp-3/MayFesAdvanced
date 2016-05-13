@@ -32,7 +32,7 @@ private:
   static BreakOut *mInstance;
 
   static const int height = 3;
-  static const int width = 5;
+  static const int width = 8;
   bool blocks[height][width];
 
   Display *display;

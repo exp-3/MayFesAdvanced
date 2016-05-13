@@ -13,10 +13,10 @@ BreakOut *BreakOut::mInstance = NULL;
 // 888         "Y88888P"  8888888P"  88888888 8888888 "Y8888P"
 
 void BreakOut::init() {
-	ball.x  = 0;
-	ball.y  = 4;
-	ball.vx = 1;
-	ball.vy = 1;
+  ball.x  = 5;
+  ball.y  = 4;
+  ball.vx = 1;
+  ball.vy = 1;
 
 	bar.x = 6;
 
@@ -26,8 +26,8 @@ void BreakOut::init() {
 		}
 	}
 
-	gameOverFlag = false;
-	clearFlag = true;
+  gameOverFlag = false;
+  clearFlag = false;
 }
 
 Game *BreakOut::getInstance() {
@@ -45,6 +45,13 @@ void BreakOut::update() {
 		init();
 	}
 	if(!gameOverFlag){
+    clearFlag = true;
+    for(int i = 0; i < height; i++) {
+      for(int j = 0; j < width; j++) {
+        clearFlag &= !blocks[i][j];
+      }
+    }
+
 		// ballの衝突判定
 		if(ball.y == 6 && ball.x >= bar.x && ball.x < bar.x + 4) {
 			ball.vy = -ball.vy;
@@ -53,15 +60,15 @@ void BreakOut::update() {
 		for(int i = 0; i < height; i++) {
 			for(int j = 0; j < width; j++) {
 				if(blocks[i][j]) {
-					if((ball.y == i + 1 && ball.x >= 3 * j + 1 && ball.x < 3 * j + 3 &&
+					if((ball.y == i + 1 && ball.x >= 2 * j && ball.x < 2 * j + 2 &&
 						ball.vy < 0) ||
-					   (ball.y == i - 1 && ball.x >= 3 * j + 1 && ball.x < 3 * j + 3 &&
+					   (ball.y == i - 1 && ball.x >= 2 * j && ball.x < 2 * j + 2 &&
 						ball.vy > 0)) {
 						blocks[i][j] = false;
 						ball.vy      = -ball.vy;
 					}
-					if(ball.y == i && ((ball.x == 3 * j && ball.vx > 0) ||
-									   (ball.x == 3 * j + 3 && ball.vx < 0))) {
+					if(ball.y == i && ((ball.x == 2 * j - 1 && ball.vx > 0) ||
+									   (ball.x == 2 * j + 2 && ball.vx < 0))) {
 						blocks[i][j] = false;
 						ball.vx      = -ball.vx;
 					}
@@ -93,7 +100,6 @@ void BreakOut::update() {
 			ball.vy = -ball.vy;
 		} else if(ball.y >= 8) {
 			gameOverFlag = true;
-			clearFlag = false;
 		}
 	}
 	// blockの描画
@@ -101,7 +107,7 @@ void BreakOut::update() {
 		for(int j = 0; j < width; j++) {
 			if(blocks[i][j]) {
 				for(int k = 0; k < 2; k++) {
-					display->set(i, 3 * j + k + 1);
+					display->set(i, 2 * j + k);
 				}
 			}
 		}
@@ -137,6 +143,6 @@ BreakOut::BreakOut() {
 	display = Display::getInstance();
 	accel = Accelerometer::getInstance();
 	pushswitch = PushSwitch::getInstance();
-  
+
 	init();
 }
