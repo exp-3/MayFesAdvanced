@@ -29,6 +29,7 @@ public:
 class Iraira : Game {
 public:
 	static Game *getInstance();
+	void init();
 	void update();
 	bool isGameOver();
 	bool isCleared();
@@ -44,16 +45,16 @@ private:
 
 	Knight knight;
 	int knightbrinkstate;
-	
+
 	int wallcount;
 	int wallnum;
 	int level;
 
 	Timer timer, ktimer;
-	
+
 	std::vector<Wall> walls;
 	std::vector<Door> doors;
-	
+
 	bool wallstartFlag;
 	bool gameOverFlag;
 	bool clearFlag;
