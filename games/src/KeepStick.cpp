@@ -11,7 +11,7 @@ int clearpanel[8][16] = {
 	{0,1,0,1,1,0,1,1,0,1,0,1,0,1,0,1},
 	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 };
-
+int clearnum = 0;
 KeepStick *KeepStick::mInstance = NULL;
 
 Game *KeepStick::getInstance() {
@@ -26,8 +26,8 @@ void KeepStick::init() {
 	timer.start();
 	W_GRIDS = 16;
 	SENSITIVE = 0.05;
-	MAXTIME = 8;
-	time = 8;
+	MAXTIME = 8 * (clearnum + 1);
+	time = MAXTIME;
 
 	stick.rad = 0.0;
 	stick.rad_v = 0.2;
@@ -70,6 +70,7 @@ void KeepStick::update() {
 		if(timer.read_ms() > 1000){
 			time--;
 			if(time < 0) clearFlag = true;
+			clearnum++;
 			timer.reset();
 		}
 	}
@@ -93,10 +94,8 @@ void KeepStick::update() {
 	}
 	else{
 		// 残り時間の描画
-		for(int i = 0;i < time; i++){
-			for(int j = 0;j < W_GRIDS / MAXTIME; j++){
-				display->set(0, i * W_GRIDS / MAXTIME + j);
-			}
+		for(int i = 0;i < (time * W_GRIDS) / MAXTIME; i++){
+			display->set(0, i);
 		}
 		// barの描画
 		for(int i = 0; i < bar.width; i++) {

@@ -124,8 +124,8 @@ void Iraira::update() {
 			}
 		}else{
 			int waittime;
-			if(level < 10) waittime = 700 - level * 50;
-			else waittime = 700 - 10 * 50;
+			if(level < 20) waittime = 690 - level * 30;
+			else waittime = 690 - 19 * 30;
 			if(timer.read_ms() > waittime) {
 				if(!walls.empty()){
 					if(!doors.empty()){
@@ -151,7 +151,7 @@ void Iraira::update() {
 							eraseFlag = true;
 						}
 					}
-					if(rand() % 20 == 0){
+					if(rand() % 15 == 0){
 						doors.push_back(Door());
 						doors.back().x = walls.back().x;
 						if(rand() % 3 == 0) {
@@ -164,7 +164,7 @@ void Iraira::update() {
 					}
 					if(eraseFlag) walls.erase(temp);
 				}
-				if(wallcount % 6 == 0){
+				if(wallcount % 5 == 0){
 					walls.push_back(Wall());
 					walls.back().x = 0;
 					walls.back().passflag = false;
