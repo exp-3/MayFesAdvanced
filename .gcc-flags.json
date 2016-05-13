@@ -1,0 +1,8 @@
+{
+  "execPath": "arm-none-eabi-g++",
+  "gccDefaultCFlags": "-Wall",
+  "gccDefaultCppFlags": "-c -Wall -std=gnu++98 -fsyntax-only",
+  "gccErrorLimit": 15,
+  "gccIncludePaths": ".,./mbed,./inc,./lib/inc,./games/inc,./mbed/TARGET_LPC1114,./mbed/TARGET_LPC1114/TARGET_NXP,./mbed/TARGET_LPC1114/TARGET_NXP/TARGET_LPC11XX_11CXX,./mbed/TARGET_LPC1114/TARGET_NXP/TARGET_LPC11XX_11CXX/TARGET_LPC11XX,./mbed/TARGET_LPC1114/TOOLCHAIN_GCC_ARM",
+  "gccSuppressWarnings": false
+}
