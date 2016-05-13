@@ -3,6 +3,7 @@
 
 class Game {
 public:
+  virtual void init() = 0;
   virtual void update() = 0;
   virtual bool isGameOver() = 0;
   virtual bool isCleared() = 0;
