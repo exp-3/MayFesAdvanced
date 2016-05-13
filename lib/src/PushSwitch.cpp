@@ -22,9 +22,10 @@ void PushSwitch::reset() {
 PushSwitch *PushSwitch::mInstance = NULL;
 
 PushSwitch::PushSwitch() {
-  event = new InterruptIn(dp17);
   reset();
 
+  event = new InterruptIn(dp17);
+  event->mode(PullUp);
   event->fall(this, &PushSwitch::setPressedFlag);
 }
 
