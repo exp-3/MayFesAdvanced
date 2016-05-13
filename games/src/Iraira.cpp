@@ -103,7 +103,7 @@ void Iraira::init() {
 
 	walls.clear();
 	doors.clear();
-	
+
 	wallstartFlag = false;
 	gameOverFlag = false;
 	clearFlag = false;
@@ -151,7 +151,7 @@ void Iraira::update() {
 							eraseFlag = true;
 						}
 					}
-					if(rand() % 15 == 0){
+					if(rand() % 10 == 0){
 						doors.push_back(Door());
 						doors.back().x = walls.back().x;
 						if(rand() % 3 == 0) {
@@ -164,7 +164,7 @@ void Iraira::update() {
 					}
 					if(eraseFlag) walls.erase(temp);
 				}
-				if(wallcount % 5 == 0){
+				if(wallcount % 6 == 0){
 					walls.push_back(Wall());
 					walls.back().x = 0;
 					walls.back().passflag = false;
@@ -297,6 +297,6 @@ Iraira::Iraira() {
 	display = Display::getInstance();
 	accel = Accelerometer::getInstance();
 	pushswitch = PushSwitch::getInstance();
-	
+
 	init();
 }

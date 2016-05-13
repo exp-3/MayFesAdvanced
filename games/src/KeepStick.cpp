@@ -69,13 +69,15 @@ void KeepStick::update() {
 		// timeの更新
 		if(timer.read_ms() > 1000){
 			time--;
-			if(time < 0) clearFlag = true;
-			clearnum++;
+			if(time < 0) {
+				clearFlag = true;
+				clearnum++;
+			}
 			timer.reset();
 		}
 	}
 
-		
+
 	/*描画*/
 	if(clearFlag){
 		int temp = (int)(timer.read_ms() / 100) % 16;
@@ -123,6 +125,6 @@ KeepStick::KeepStick() {
 	display = Display::getInstance();
 	accel = Accelerometer::getInstance();
 	pushswitch = PushSwitch::getInstance();
-	
+
 	init();
 }
