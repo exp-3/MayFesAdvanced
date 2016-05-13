@@ -1,16 +1,18 @@
 #include "mbed.h"
 #include "KeepStick.hpp"
 
-KeepStick *KeepStick::mInstance = NULL;
+int clearpanel[8][16] = {
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{0,1,0,1,0,0,1,1,0,0,1,0,0,1,1,0},
+	{1,0,0,1,0,0,1,0,0,1,0,1,0,1,0,1},
+	{1,0,0,1,0,0,1,1,0,1,0,1,0,1,1,0},
+	{1,0,0,1,0,0,1,0,0,1,1,1,0,1,0,1},
+	{0,1,0,1,1,0,1,1,0,1,0,1,0,1,0,1},
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+};
 
-// 8888888b.  888     888 888888b.   888      8888888 .d8888b.
-// 888   Y88b 888     888 888  "88b  888        888  d88P  Y88b
-// 888    888 888     888 888  .88P  888        888  888    888
-// 888   d88P 888     888 8888888K.  888        888  888
-// 8888888P"  888     888 888  "Y88b 888        888  888
-// 888        888     888 888    888 888        888  888    888
-// 888        Y88b. .d88P 888   d88P 888        888  Y88b  d88P
-// 888         "Y88888P"  8888888P"  88888888 8888888 "Y8888P"
+KeepStick *KeepStick::mInstance = NULL;
 
 Game *KeepStick::getInstance() {
 	if(mInstance == NULL) {
@@ -22,41 +24,66 @@ Game *KeepStick::getInstance() {
 
 void KeepStick::update() {
 	/*処理*/
-	// stickの更新
-	if(stick.rad >= 1.57 || stick.rad <= -1.57){
-		if(stick.rad >= 1.57) stick.rad = 1.57;
-		if(stick.rad >= -1.57) stick.rad = -1.57;
-		gameOverFlag = true;
-		clearFlag = false;
-	}else{		
-		stick.rad += stick.rad_v;
-		stick.rad_v += (double)(accel->getY() >> 5) * SENSITIVE;
+	if(!clearFlag){
+		// stickの更新
 		stick.tri();
-	}
-    // barの更新
-	bar.x += accel->getY() >> 5;
-	if(bar.x < 0) {
-		bar.x = 0;
-	} else if(bar.x > 13) {
-		bar.x = 13;
-	}
-	// timeの更新
-	
-	
-	/*描画*/	
-	// 残り時間の描画
-	for(int i = 0;i < time; i++){
-		for(int j = 0;j < W_GRIDS / MAXTIME; j++){
-			display->set(0, i * W_GRIDS / MAXTIME + j);
+		if(stick.cos <= 0){
+			gameOverFlag = true;
+		}else{		
+			stick.rad += stick.rad_v;
+			double temp;
+			if(stick.rad < 0) temp = -0.1;
+			else temp = 0.1;
+			stick.rad_v -= ((double)(accel->getY() >> 5) + temp) * SENSITIVE;
+		}
+		// barの更新
+		bar.x += accel->getY() >> 5;
+		if(bar.x < 0) {
+			bar.x = 0;
+		} else if(bar.x > 11) {
+			bar.x = 11;
+		}
+		// timeの更新
+		if(timer.read_ms() > 1000){
+			time--;
+			if(time < 0) clearFlag = true;
+			timer.reset();
 		}
 	}
-    // barの描画
-	for(int i = 0; i < bar.width; i++) {
-		display->set(7, bar.x + i);
+	/*描画*/
+	if(clearFlag){
+		int temp = (int)(timer.read_ms() / 100) % 16;
+		if(temp < 8){
+			display->set(0, 2*temp);
+			display->set(0, 2*temp + 1);
+		}else{
+			display->set(7, 2*(15 - temp));
+			display->set(7, 2*(15 - temp) + 1);
+		}
+		for(int i = 0;i < 8;i++){
+			for(int j = 0;j < 16;j++){
+				if(clearpanel[i][j] == 1) display->set(i, j);
+			}
+		}
 	}
-	// stickの描画
-	for(double i = 0.5; (int)i < stick.length; i += 1.0){
-		display->set(6 - (int)(i * stick.cos), bar.x + 1 + (int)(i * stick.sin));
+	else{
+		// 残り時間の描画
+		for(int i = 0;i < time; i++){
+			for(int j = 0;j < W_GRIDS / MAXTIME; j++){
+				display->set(0, i * W_GRIDS / MAXTIME + j);
+			}
+		}
+		// barの描画
+		for(int i = 0; i < bar.width; i++) {
+			display->set(7, bar.x + i);
+		}
+		// stickの描画
+		for(double i = 0.5; (int)i < stick.length; i += 1.0){
+			int temp = bar.x + 2 + (int)(i * stick.sin);
+			if(temp >= 0 && temp <= 15){
+				display->set(6 - (int)(i * stick.cos), bar.x + 2 + (int)(i * stick.sin));
+			}
+		}
 	}
 }
 
@@ -68,26 +95,20 @@ bool KeepStick::isCleared() {
 	return clearFlag;
 }
 
-// 8888888b.  8888888b.  8888888 888     888     d8888 88888888888 8888888888
-// 888   Y88b 888   Y88b   888   888     888    d88888     888     888
-// 888    888 888    888   888   888     888   d88P888     888     888
-// 888   d88P 888   d88P   888   Y88b   d88P  d88P 888     888     8888888
-// 8888888P"  8888888P"    888    Y88b d88P  d88P  888     888     888
-// 888        888 T88b     888     Y88o88P  d88P   888     888     888
-// 888        888  T88b    888      Y888P  d8888888888     888     888
-// 888        888   T88b 8888888     Y8P  d88P     888     888     8888888888
-
 KeepStick::KeepStick() {
 	display = Display::getInstance();
 	accel = Accelerometer::getInstance();
 
+	timer.start();
+	time = MAXTIME;
+	
 	stick.rad = 0.0;
-	stick.rad_v = 0.1;
+	stick.rad_v = 0.2;
 	stick.length = 5;
 
 	bar.x = 6;
-	bar.width = 3;
+	bar.width = 5;
 	
 	gameOverFlag = false;
-	clearFlag = true;
+	clearFlag = false;
 }
