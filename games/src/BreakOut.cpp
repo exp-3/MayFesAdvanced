@@ -1,6 +1,7 @@
 #include "mbed.h"
 #include "BreakOut.hpp"
 
+
 BreakOut *BreakOut::mInstance = NULL;
 
 // 8888888b.  888     888 888888b.   888      8888888 .d8888b.
@@ -13,7 +14,7 @@ BreakOut *BreakOut::mInstance = NULL;
 // 888         "Y88888P"  8888888P"  88888888 8888888 "Y8888P"
 
 void BreakOut::init() {
-  ball.x  = 5;
+  ball.x  = 4;
   ball.y  = 4;
   ball.vx = 1;
   ball.vy = 1;
@@ -39,12 +40,23 @@ Game *BreakOut::getInstance() {
 }
 
 void BreakOut::update() {
+  int clearpanel2[8][16] = {
+  	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+  	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+  	{0,1,0,1,0,0,1,1,0,0,1,0,0,1,1,0},
+  	{1,0,0,1,0,0,1,0,0,1,0,1,0,1,0,1},
+  	{1,0,0,1,0,0,1,1,0,1,0,1,0,1,1,0},
+  	{1,0,0,1,0,0,1,0,0,1,1,1,0,1,0,1},
+  	{0,1,0,1,1,0,1,1,0,1,0,1,0,1,0,1},
+  	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+  };
 	/*初期化*/
 	if(pushswitch->isPressed()){
 		pushswitch->reset();
 		init();
 	}
-	if(!gameOverFlag){
+
+	if(!clearFlag && !gameOverFlag){
     clearFlag = true;
     for(int i = 0; i < height; i++) {
       for(int j = 0; j < width; j++) {
@@ -102,24 +114,31 @@ void BreakOut::update() {
 			gameOverFlag = true;
 		}
 	}
-	// blockの描画
-	for(int i = 0; i < height; i++) {
-		for(int j = 0; j < width; j++) {
-			if(blocks[i][j]) {
-				for(int k = 0; k < 2; k++) {
-					display->set(i, 2 * j + k);
-				}
+  if(clearFlag){
+		for(int i = 0;i < 8;i++){
+			for(int j = 0;j < 16;j++){
+				if(clearpanel2[i][j] == 1) display->set(i, j);
 			}
 		}
-	}
+  }else{
+  	// blockの描画
+	  for(int i = 0; i < height; i++) {
+	  	for(int j = 0; j < width; j++) {
+		  	if(blocks[i][j]) {
+			  	for(int k = 0; k < 2; k++) {
+			  		display->set(i, 2 * j + k);
+		  		}
+	  		}
+	  	}
+	  }
+	  // barの描画
+	  for(int i = 0; i < 4; i++) {
+	  	display->set(7, bar.x + i);
+	  }
 
-	// barの描画
-	for(int i = 0; i < 4; i++) {
-		display->set(7, bar.x + i);
-	}
-
-	// ballの描画
-	display->set(ball.y, ball.x);
+	  // ballの描画
+	  display->set(ball.y, ball.x);
+  }
 }
 
 bool BreakOut::isGameOver() {

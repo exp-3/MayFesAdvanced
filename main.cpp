@@ -7,6 +7,7 @@
 #include "KeepStick.hpp"
 #include "Iraira.hpp"
 
+int waittime_ms = 100;
 Game* Opening(Display *display){
 	const int openingpanel[3][7][5] = {
 		{
@@ -78,6 +79,7 @@ Game* Opening(Display *display){
 				return KeepStick::getInstance();
 				break;
 			case 1:
+        waittime_ms = 150;
 				return BreakOut::getInstance();
 				break;
 			case 2:
@@ -240,6 +242,6 @@ int main() {
 		game->update();
 		display->flush();
 
-		wait(0.1);
+		wait_ms(waittime_ms);
 	}
 }
