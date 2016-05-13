@@ -12,6 +12,24 @@ BreakOut *BreakOut::mInstance = NULL;
 // 888        Y88b. .d88P 888   d88P 888        888  Y88b  d88P
 // 888         "Y88888P"  8888888P"  88888888 8888888 "Y8888P"
 
+void BreakOut::init() {
+  ball.x  = 0;
+  ball.y  = 4;
+  ball.vx = 1;
+  ball.vy = 1;
+
+  bar.x = 6;
+
+  for(int i = 0; i < height; i++) {
+    for(int j = 0; j < width; j++) {
+      blocks[i][j] = true;
+    }
+  }
+
+  gameOverFlag = false;
+  clearFlag = true;
+}
+
 Game *BreakOut::getInstance() {
   if(mInstance == NULL) {
     mInstance = new BreakOut();
@@ -113,19 +131,5 @@ BreakOut::BreakOut() {
   display = Display::getInstance();
   accel = Accelerometer::getInstance();
 
-  ball.x  = 0;
-  ball.y  = 4;
-  ball.vx = 1;
-  ball.vy = 1;
-
-  bar.x = 6;
-
-  for(int i = 0; i < height; i++) {
-    for(int j = 0; j < width; j++) {
-      blocks[i][j] = true;
-    }
-  }
-
-  gameOverFlag = false;
-  clearFlag = true;
+  init();
 }
