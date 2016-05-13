@@ -17,9 +17,17 @@ Display *Display::getInstance() {
   return mInstance;
 }
 
-void Display::set(int row, int col) { buffer[row][col] = true; }
+void Display::set(int row, int col) {
+  if(row >= 0 && row < height && col >= 0 && col < width) {
+    buffer[row][col] = true;
+  }
+}
 
-void Display::reset(int row, int col) { buffer[row][col] = false; }
+void Display::reset(int row, int col) {
+  if(row >= 0 && row < height && col >= 0 && col < width) {
+    buffer[row][col] = false;
+  }
+}
 
 void Display::flush() {
   convertBufferToShiftRegisterCodes();
