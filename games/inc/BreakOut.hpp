@@ -4,6 +4,7 @@
 #include "Game.hpp"
 #include "Display.hpp"
 #include "Accelerometer.hpp"
+#include "PushSwitch.hpp"
 
 class Ball {
 public:
@@ -36,6 +37,8 @@ private:
 
   Display *display;
   Accelerometer *accel;
+  PushSwitch *pushswitch;
+
   Ball ball;
   Bar bar;
 

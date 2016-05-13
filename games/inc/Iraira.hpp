@@ -4,6 +4,7 @@
 #include "Game.hpp"
 #include "Display.hpp"
 #include "Accelerometer.hpp"
+#include "PushSwitch.hpp"
 #include <vector>
 
 class Wall {
@@ -42,7 +43,8 @@ private:
 
 	Display *display;
 	Accelerometer *accel;
-
+	PushSwitch *pushswitch;
+	
 	Knight knight;
 	int knightbrinkstate;
 

@@ -2,11 +2,10 @@
 #include "Display.hpp"
 #include "Accelerometer.hpp"
 #include "Game.hpp"
+#include "PushSwitch.hpp"
 #include "BreakOut.hpp"
 #include "KeepStick.hpp"
 #include "Iraira.hpp"
-
-Serial pc(USBTX, USBRX);
 
 Game* Opening(Display *display){
 	const int openingpanel[3][7][5] = {
@@ -44,6 +43,8 @@ Game* Opening(Display *display){
 	timer.start();
 	Accelerometer *accel;
 	accel = Accelerometer::getInstance();
+	PushSwitch *pushswitch;
+	pushswitch = PushSwitch::getInstance();
 	int count = 0;
 	int mode;
 	
@@ -67,10 +68,26 @@ Game* Opening(Display *display){
 		else if(x > 15) x = 15;
 		y += accel->getX() >> 6;
 		if(y < 0) y = 0;
-		else if(y > 15) y = 15;
+		else if(y > 7) y = 7;
 		
 		/*ゲームモード確定*/
-		if(timer.read_ms() > 10000) return Iraira::getInstance();
+		if(pushswitch->isPressed()){
+			pushswitch->reset();
+			switch(mode){
+			case 0:
+				return KeepStick::getInstance();
+				break;
+			case 1:
+				return BreakOut::getInstance();
+				break;
+			case 2:
+				return Iraira::getInstance();
+				break;
+			default:
+				break;
+			}
+		}
+		
 		/*描画*/
 		for(int k = 0;k < 3;k++){
 			for(int i = 0;i < 7;i++){
@@ -213,17 +230,11 @@ Game* Opening(Display *display){
 }
 
 int main() {
-	pc.baud(115200);
-
 	Display *display = Display::getInstance();
 
-	//Game *game = Iraira::getInstance();
-	Game *game = Opening(display);
-
+	Game *game = Opening(display); 
+	
 	while(1) {
-		if(game->isGameOver()) {
-			break;
-		}
 		//描画開始
 		display->clear();
 		game->update();
