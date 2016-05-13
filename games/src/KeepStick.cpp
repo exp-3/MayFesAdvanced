@@ -22,6 +22,21 @@ Game *KeepStick::getInstance() {
 	return mInstance;
 }
 
+void KeepStick::init() {
+	timer.start();
+	time = MAXTIME;
+
+	stick.rad = 0.0;
+	stick.rad_v = 0.2;
+	stick.length = 5;
+
+	bar.x = 6;
+	bar.width = 5;
+
+	gameOverFlag = false;
+	clearFlag = false;
+}
+
 void KeepStick::update() {
 	/*処理*/
 	if(!clearFlag){
@@ -29,7 +44,7 @@ void KeepStick::update() {
 		stick.tri();
 		if(stick.cos <= 0){
 			gameOverFlag = true;
-		}else{		
+		}else{
 			stick.rad += stick.rad_v;
 			double temp;
 			if(stick.rad < 0) temp = -0.1;
@@ -99,16 +114,5 @@ KeepStick::KeepStick() {
 	display = Display::getInstance();
 	accel = Accelerometer::getInstance();
 
-	timer.start();
-	time = MAXTIME;
-	
-	stick.rad = 0.0;
-	stick.rad_v = 0.2;
-	stick.length = 5;
-
-	bar.x = 6;
-	bar.width = 5;
-	
-	gameOverFlag = false;
-	clearFlag = false;
+	init();
 }

@@ -88,6 +88,25 @@ Game *Iraira::getInstance() {
 	return mInstance;
 }
 
+void Iraira::init() {
+	timer.start();
+
+	wallcount = 0;
+	wallnum = 0;
+	level = 0;
+
+	knight.x = 8;
+	knight.y = 4;
+	knight.health = 3;
+	knight.sensitive = 0.1;
+	knightbrinkstate = 0;
+
+	wallstartFlag = false;
+
+	gameOverFlag = false;
+	clearFlag = false;
+}
+
 void Iraira::update() {
     if(!clearFlag){
 		// wallの更新
@@ -131,7 +150,7 @@ void Iraira::update() {
 						doors.back().x = walls.back().x;
 						if(rand() % 3 == 0) {
 							doors.back().reverseFlag = true;
-							doors.back().y = 7;							
+							doors.back().y = 7;
 						}else {
 							doors.back().reverseFlag = false;
 							doors.back().y = 0;
@@ -272,20 +291,5 @@ Iraira::Iraira() {
 	display = Display::getInstance();
 	accel = Accelerometer::getInstance();
 
-	timer.start();
-  
-	wallcount = 0;
-	wallnum = 0;
-	level = 0;
-
-	knight.x = 8;
-	knight.y = 4;
-	knight.health = 3;
-	knight.sensitive = 0.1;
-	knightbrinkstate = 0;
-	
-	wallstartFlag = false;
-  
-	gameOverFlag = false;
-	clearFlag = false;
+	init();
 }
