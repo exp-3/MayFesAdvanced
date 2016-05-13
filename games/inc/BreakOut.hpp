@@ -19,6 +19,7 @@ public:
 class BreakOut : Game {
 public:
   static Game *getInstance();
+  void init();
   void update();
   bool isGameOver();
   bool isCleared();
